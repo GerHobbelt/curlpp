@@ -20,10 +20,10 @@ SList::SList(const SList & rhs)
 }
 
 
-SList::SList(curl_slist * list)
+SList::SList(curl_slist * slist)
 	: mList(NULL)
 {
-	constructFrom(list);
+	constructFrom(slist);
 }
 
 
@@ -58,11 +58,11 @@ SList::clear()
 
 
 void 
-SList::constructFrom(curl_slist * list)
+SList::constructFrom(curl_slist * slist)
 {
 	mData.clear();
 
-	curl_slist * c = list;
+	curl_slist * c = slist;
 	while(c)
 	{
 		mData.push_back(c->data);
@@ -74,9 +74,9 @@ SList::constructFrom(curl_slist * list)
 
 
 void 
-SList::set(const std::list<std::string> & list) 
+SList::set(const std::list<std::string> & slist) 
 {
-	mData = list;
+	mData = slist;
 	update();
 }
 
@@ -102,9 +102,9 @@ SList::operator std::list<std::string> ()
 
 
 SList &
-SList::operator=(const std::list<std::string> & list)
+SList::operator=(const std::list<std::string> & slist)
 {
-	set(list);
+	set(slist);
 	return (*this);
 }
 
