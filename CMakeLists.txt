@@ -21,6 +21,7 @@ if(WIN32)
     set(CMAKE_CXX_STANDARD 11) # C++11...
     set(CMAKE_CXX_STANDARD_REQUIRED ON) #...is required...
     set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
+    SET(CMAKE_CXX_FLAGS "-DCURL_STATICLIB")
 
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   else()
