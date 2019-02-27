@@ -6,7 +6,6 @@
 *.Plo
 *.dylib
 *.lai
-Makefile
 *~
 
 build/
