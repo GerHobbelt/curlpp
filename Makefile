@@ -36,4 +36,7 @@ $(CURLPP_A): $(HEADERS) $(OBJS) | $(LIBRARY_OUTPUT_DIR)
 clean:
 	rm -rf $(LIBRARY_OUTPUT_DIR)
 
+cleanall: clean
+	rm -rf build
+
 all: $(CURLPP_A)
