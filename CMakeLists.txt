@@ -1,6 +1,6 @@
 project(curlpp) 
 
-
+cmake_minimum_required(VERSION 3.14)
 # In response to CMake 3.0 generating warnings regarding policy CMP0042,
 # the OSX RPATH settings have been updated per recommendations found
 # in the CMake Wiki:
@@ -19,7 +19,7 @@ include(GNUInstallDirs)
 
 if(WIN32)
     # cmake 3.4 is required for CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
-    cmake_minimum_required(VERSION 3.4)
+   
 
     # c++ 11 support from cmake 3.4 or newer
     set(CMAKE_CXX_STANDARD 11) # C++11...
@@ -60,14 +60,26 @@ add_subdirectory(extras)
 # Seems simple.
 
 message(STATUS "Looking for CURL")
-find_package(CURL REQUIRED)
+find_package(CURL)
 
 if(CURL_FOUND)
   message(STATUS "Found CURL version: ${CURL_VERSION_STRING}")
   message(STATUS "Using CURL include dir(s): ${CURL_INCLUDE_DIRS}")
   message(STATUS "Using CURL lib(s): ${CURL_LIBRARIES}")
 else()
-  message(FATAL_ERROR "Could not find CURL")
+
+  # Fetch cURL
+  message(STATUS "Could not find CURL, downloading it from github.")
+  
+  FetchContent_Declare(
+    curl 
+    GIT_REPOSITORY    https://github.com/curl/curl.git
+    GIT_TAG           curl-7_74_0
+  )
+  set(BUILD_CURL_EXE OFF)
+  FetchContent_MakeAvailable(curl) 
+  get_target_property(CURL_INCLUDE_DIRS libcurl INCLUDE_DIRECTORIES) 
+
 endif()
 
 # All following targets should search these directories for headers
@@ -92,7 +104,7 @@ file(GLOB_RECURSE SourceFileList "${CMAKE_CURRENT_SOURCE_DIR}/src/*")
 option(CURLPP_BUILD_SHARED_LIBS "Build shared libraries" OFF)
 if(CURLPP_BUILD_SHARED_LIBS)
    add_library(${PROJECT_NAME} SHARED ${HeaderFileList} ${SourceFileList})
-   target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} ${CONAN_LIBS})
+   target_link_libraries(${PROJECT_NAME} libcurl ${CONAN_LIBS})
    set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 1 VERSION 1.0.0)
 endif()
 
@@ -109,7 +121,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NA
 # This conflicts with the "curlpp.lib" import library corresponding to "curlpp.dll",
 # so we add a "lib" prefix (which is default on other platforms anyway):
 SET_TARGET_PROPERTIES(${PROJECT_NAME}_static PROPERTIES PREFIX "lib")
-target_link_libraries(${PROJECT_NAME}_static ${CURL_LIBRARIES} ${CONAN_LIBS})
+target_link_libraries(${PROJECT_NAME}_static libcurl ${CONAN_LIBS})
 
 # install headers
 install(DIRECTORY include/utilspp/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/utilspp")
