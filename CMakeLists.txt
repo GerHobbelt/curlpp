@@ -84,13 +84,7 @@ else()
   get_target_property(CURL_INCLUDE_DIRS libcurl INCLUDE_DIRECTORIES) 
 
 endif()
-
-# All following targets should search these directories for headers
-include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CURL_INCLUDE_DIRS}
-)
-
+ 
 #########################################################################################
 # Define Targets
 
@@ -125,6 +119,9 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NA
 # so we add a "lib" prefix (which is default on other platforms anyway):
 SET_TARGET_PROPERTIES(${PROJECT_NAME}_static PROPERTIES PREFIX "lib")
 target_link_libraries(${PROJECT_NAME}_static libcurl ${CONAN_LIBS})
+target_include_directories(${PROJECT_NAME}_static 
+PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include 
+PRIVATE ${CURL_INCLUDE_DIRS})
 
 # install headers
 install(DIRECTORY include/utilspp/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/utilspp")
