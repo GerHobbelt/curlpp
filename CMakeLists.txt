@@ -1,6 +1,9 @@
 project(curlpp) 
 
 cmake_minimum_required(VERSION 3.14)
+
+include(FetchContent) 
+
 # In response to CMake 3.0 generating warnings regarding policy CMP0042,
 # the OSX RPATH settings have been updated per recommendations found
 # in the CMake Wiki:
@@ -69,7 +72,7 @@ if(CURL_FOUND)
 else()
 
   # Fetch cURL
-  message(STATUS "Could not find CURL, downloading it from github.")
+  message(STATUS "NOT TO WORRY, I'LL DOWNLOAD cURL FROM GITHUB!")
   
   FetchContent_Declare(
     curl 
